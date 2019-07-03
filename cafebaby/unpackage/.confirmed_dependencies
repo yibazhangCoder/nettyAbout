@@ -1,0 +1,35 @@
+{
+	"index.html": {
+		"resources": [
+			"cafebaby-chatlist.html"
+		],
+		"refer": [
+			"cafebaby-discover.html",
+			"cafebaby-contact.html",
+			"cafebaby-me.html",
+			"cafebaby-chatlist.html"
+		]
+	},
+	"login.html": {
+		"refer": [
+			"main.html",
+			"index.html"
+		]
+	},
+	"cafebaby-me.html": {
+		"refer": [
+			"login.html"
+		]
+	},
+	"cafebaby-discover.html": {
+		"refer": [
+			"serchUser.html",
+			"scanPage.html"
+		]
+	},
+	"serchUser.html": {
+		"refer": [
+			"FriendDetail.html"
+		]
+	}
+}

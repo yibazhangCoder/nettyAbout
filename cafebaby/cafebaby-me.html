@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+		    <ul class="mui-table-view">
+		        <li class="mui-table-view-cell mui-media">
+		            <a id="face_image_change" href="javascript:;">
+		                <img id="face-img" class="mui-media-object mui-pull-right" src="" style="margin-right: 5px;">
+		                <div class="mui-media-body" style="line-height: 42px;">
+		                    头像
+		                </div>
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell mui-media">
+		            <a href="javascript:;" id="nickname_tap">
+		            	<span  class="mui-icon mui-icon-arrowright mui-pull-right" style="line-height: 30px;"></span>
+		            	<span id="nickname" class="mui-pull-right" style="line-height: 30px;"></span>
+		                <div class="mui-media-body" style="line-height: 30px;">
+		                    昵称
+		                </div>
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell mui-media">
+		            <a href="javascript:;">
+		                <span id="username" class="mui-pull-right" style="line-height: 30px;margin-right: 10px;">cafebaby</span>
+		                <div class="mui-media-body" style="line-height: 30px;">
+		                    账号
+		                </div>
+		            </a>
+		        </li>
+		        <li class="mui-table-view-cell mui-media">
+		            <a href="javascript:;" id="qrcode_tap">
+		            	<span  class="mui-icon mui-icon-arrowright mui-pull-right" style="line-height: 42px;"></span>
+		                <img class="mui-media-object mui-pull-right" src="images/qrcode.png" style="line-height: 42px;">
+		                <div class="mui-media-body" style="line-height: 42px;">
+		                    二维码
+		                </div>
+		            </a>
+		        </li>
+		    </ul>
+		    <br/>
+		    <ul class="mui-table-view">
+		    	<li class="mui-table-view-cell mui-media">
+		            <a href="javascript:;" id="login-out">
+		                <div class="mui-media-body" style="text-align: center;">
+		                    退出登录
+		                </div>
+		            </a>
+		        </li>
+		    </ul>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+				
+				var meWebView = plus.webview.currentWebview();
+				meWebView.addEventListener("show",function(){
+					refreshUserInfo(); 
+				});
+				
+				var tap_nickname = document.getElementById("nickname_tap");
+				var tap_qrcode = document.getElementById("qrcode_tap");
+				var logout = document.getElementById("login-out");
+				var user = app.getGlobeUserInfo();
+				
+				var nickname_temp = document.getElementById("nickname");
+				tap_nickname.addEventListener("tap",function(){
+					plus.nativeUI.prompt(" ", function(e){
+						var index = e.index;
+						var val = e.value;
+						if(index==0){
+							if(val.length<1){
+								app.showToast("昵称应该不能为空");
+								return false;
+							}
+							if(val.length>12){
+								app.showToast("昵称不能大于12");
+								return false;
+							}
+							plus.nativeUI.showWaiting("更新中...")
+							mui.ajax(app.appGloableUrl+"/u/updateUser",{
+								data:{
+									id:user.id,
+									nickname:val
+								},
+								dataType:'json',//服务器返回json格式数据
+								type:'post',//HTTP请求类型
+								timeout:10000,//超时时间设置为10秒；
+								headers:{'Content-Type':'application/json'},	              
+								success:function(data){
+									plus.nativeUI.closeWaiting();
+									if(data.code==200){
+										app.showToast("更新成功","success");
+										app.saveGlobeUserInfo(data.data);
+										refreshUserInfo();
+									}else{
+										app.showToast(data.msg,"error");
+										return false;
+									}
+								}
+							});
+						}else{
+							console.log("取消");
+						}
+					}, "更改昵称", nickname_temp.innerText, ["确定","取消"]);
+				});
+				
+			
+						
+				tap_qrcode.addEventListener("tap",function(){
+					//app.showToast(user.qrcode,"success");
+					console.log(app.appGloableUrl+user.qrcode);
+					plus.nativeUI.previewImage(app.appGloableUrl+user.qrcode)					
+				});
+				
+				logout.addEventListener("tap",function(){  
+					app.loginOut();
+					mui.openWindow("login.html","login.html");
+				});
+			});
+			
+			function refreshUserInfo(){
+				var user = app.getGlobeUserInfo();
+				if(user!=null){
+					var faceImg = user.faceImage;
+					var username = user.username;
+					var nickname = user.nickname;
+					
+					var txt_nickname = document.getElementById("nickname");
+					var txt_username = document.getElementById("username");
+					txt_nickname.innerHTML = nickname;
+					txt_username.innerHTML = username;
+					if(app.isNotNull(faceImg)){
+						var img_face = document.getElementById("face-img");
+						img_face.src = faceImg;
+					}
+				}
+			}
+		</script>
+	</body>
+
+</html>

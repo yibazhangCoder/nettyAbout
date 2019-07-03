@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/header.css" />
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	//设置导航栏的颜色
+      	mui.plusReady(function(){
+      		plus.navigator.setStatusBarStyle("light");
+      		plus.navigator.setStatusBarBackground("#87CEEB");
+      	});
+    </script>
+    <style>
+    	#scanComponent{
+    			width: 100%;
+    			top:44px;
+    			bottom: 0px;
+    			position: absolute;
+    			text-align: center;
+    			background: black;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav title">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title title-color" >扫一扫</h1>
+	</header>
+	
+	<div id="scanComponent">
+	    
+	</div>
+	
+	<script type="application/javascript">
+			mui.init();
+			mui.plusReady(function(){
+	
+				setTimeout("startScan()","500");
+			});
+			
+			
+			var scan;
+			function startScan(){
+				
+		
+				scan = new plus.barcode.Barcode('scanComponent');
+				scan.onmarked = onmarked;
+				scan.start();
+			}
+			
+			function onmarked(type, result) {
+				if(type==0){
+					var content = result.split("weiliao:");
+					if(content.length!=2){
+						mui.alert(result);
+					}else{
+						var friendUsername = content[1];
+						plus.nativeUI.showWaiting("查询中。。。");
+						mui.ajax(app.appGloableUrl+"/friend/searchUser/"+friendUsername+"",{
+								data:{
+								},
+								dataType:'json',//服务器返回json格式数据
+								type:'post',//HTTP请求类型
+								timeout:10000,//超时时间设置为10秒；
+								headers:{'Content-Type':'application/json'},	              
+								success:function(data){
+									plus.nativeUI.closeWaiting();
+									if(data.code==200){
+										mui.openWindow({
+											url:"FriendDetail.html",
+											id:"FriendDetail.html",
+											extras:{
+												detail:data.data		
+											}
+										})
+									}else{
+										app.showToast(data.msg,"error");
+										return false;
+									}
+								}
+						});
+					}
+				}
+			}
+	</script>
+</body>
+</html>

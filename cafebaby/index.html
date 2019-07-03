@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/header.css" />
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+      	//设置导航栏的颜色
+      	mui.plusReady(function(){
+      		plus.navigator.setStatusBarStyle("light");
+      		plus.navigator.setStatusBarBackground("#87CEEB");
+      	});
+    </script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav title">
+	    <h1 class="mui-title title-color">微聊</h1>
+	</header>
+	
+	<nav class="mui-bar mui-bar-tab">
+	    <a class="mui-tab-item mui-active" tabindex="0">
+	        <span class="mui-icon mui-icon-chat"></span>
+	        <span class="mui-tab-label">微聊</span>
+	    </a>
+	    <a class="mui-tab-item" tabindex="1">
+	        <span class="mui-icon mui-icon-contact"></span>
+	        <span class="mui-tab-label">联系人</span>
+	    </a>
+	    <a class="mui-tab-item" tabindex="2">
+	        <span class="mui-icon mui-icon-navigate"></span>
+	        <span class="mui-tab-label">发现</span>
+	    </a>
+	    <a class="mui-tab-item" tabindex="3">
+	        <span class="mui-icon mui-icon-person"></span>
+	        <span class="mui-tab-label">我</span>
+	    </a>
+	</nav>
+	
+	<script type="application/javascript">
+		//定义四个webview页面数组
+		var cafePages = [
+			{
+				pageId:"cafebaby-chatlist.html",
+				pageUrl:"cafebaby-chatlist.html"
+			},{
+				pageId:"cafebaby-contact.html",
+				pageUrl:"cafebaby-contact.html"
+			},{
+				pageId:"cafebaby-discover.html",
+				pageUrl:"cafebaby-discover.html"
+			},{
+				pageId:"cafebaby-me.html",
+				pageUrl:"cafebaby-me.html"
+			}	
+		];
+		
+		var cafeStyle = {
+			top:"44px",
+			bottom:"50px"
+		};
+		
+		mui.plusReady(function(){
+			
+			//获取当前webview
+			var currentPage = plus.webview.currentWebview();
+			
+			//将webview页面追加到当前页面
+			for(var i= 0;i<cafePages.length;i++){
+				//将数组中的页面 创建为webview对象
+				var webViews = plus.webview.create(cafePages[i].pageUrl,cafePages[i].pageId,cafeStyle);
+				//隐藏webview
+				webViews.hide();
+				//将四个webview追加到index页面
+				currentPage.append(webViews);
+			}
+			
+			//默认 显示聊天界面
+			plus.webview.show(cafePages[0].pageId);
+			
+			mui(".mui-bar-tab").on("tap","a",function(){
+				var tabIndex = this.getAttribute("tabindex");
+				//显示当前点击的页面	
+				plus.webview.show(cafePages[tabIndex].pageId,"fade-in",200);
+				
+				//关闭其他页面
+				for(var i = 0 ;i<cafePages.length;i++){
+					if(i!=tabIndex){
+						plus.webview.hide(cafePages[i].pageId,"fade-out",200);
+					}
+				}
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		
+		<ul class="mui-table-view" id="ul_friend_request_list" style="margin-top: 5px;">
+		    <li class="mui-table-view-cell mui-media">
+		        <a href="javascript:;">
+		          <img id="friend_request_faceImage" class="mui-media-object mui-pull-left" src="images/faceimg/male1.png"
+	               		style="border-radius: 8%;line-height: 80px;max-width: 80px;">
+	               <span class="mui-pull-right">
+		               	<button friendId="111" style="padding: 4px 10px;margin-right: 5px;" class="ignoreRequest mui-btn mui-btn-danger" type="button" >
+		               		忽略
+		               	</button>
+		               	<button friendId="111" style="padding: 4px 10px;margin-right: 5px;" class="passRequest mui-btn mui-btn-green" type="button">
+		               		通过
+		               	</button>
+	               </span>
+	               <div class="mui-media-body">
+						<label id="friend_request_nickname" >马哈麻哈哈</label>
+						<p class="mui-ellipsis">请求添加你为好友~</p>
+	               </div>
+		        </a>
+		    </li>
+		</ul>
+		
+		
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/app.js" ></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function(){
+				var user = app.getGlobeUserInfo();
+				var currentWebview = plus.webview.currentWebview();
+				currentWebview.addEventListener("show",function(){
+						//console.log(user.id);
+						getAllFriendRequest(JSON.stringify(user.id));
+				});
+			});
+			
+			function getAllFriendRequest(myUserId){
+				mui.ajax(app.appGloableUrl+"/friend/getMyFriendRequests",{
+								data:{
+									acceptUserId:myUserId
+								},
+								dataType:'json',//服务器返回json格式数据
+								type:'post',//HTTP请求类型
+								timeout:10000,//超时时间设置为10秒；
+								headers:{'Content-Type':'application/json'},	              
+								success:function(data){
+									console.log(JSON.stringify(data));
+									if(data.code==200){
+										console.log(data.data)
+									}else{
+										app.showToast(data.msg,"error");
+										return false;
+									}
+								}
+							});
+			}
+		</script>
+	</body>
+
+</html>

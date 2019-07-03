@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+		    <ul class="mui-table-view">
+		        <li class="mui-table-view-cell mui-media">
+		            <img class="mui-media-object mui-pull-left" style="max-width: 23px;height: 24px;" src="images/circle.png">
+		            <p class="mui-ellipsis" style="color: #000000;line-height: 24px;margin-left: 15px;"><span>动态</span></p>
+		        </li>
+		    </ul>
+		    <br />
+		    <ul class="mui-table-view">
+		    	<li id="add-friend" class="mui-table-view-cell mui-media">
+		            <img class="mui-media-object mui-pull-left" style="max-width: 23px;height: 24px;" src="images/add.png">
+		            <p class="mui-ellipsis" style="color: #000000;line-height: 24px;margin-left: 15px;"><span>添加好友</span></p>
+		        </li>
+		        <li id="scan-qrcode" class="mui-table-view-cell mui-media">
+		            <img class="mui-media-object mui-pull-left" style="max-width: 23px;height: 24px;" src="images/scan.png">
+		            <p class="mui-ellipsis" style="color: #000000;line-height: 24px;margin-left: 15px;"><span>扫一扫</span></p>
+		        </li>
+		    </ul>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/app.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				var user = 	app.getGlobeUserInfo();
+				
+				var addFriend = document.getElementById("add-friend");
+				var scanQrcode = document.getElementById("scan-qrcode");
+				
+				addFriend.addEventListener("tap",function(){
+					mui.openWindow("serchUser.html","serchUser.html");
+				});
+				
+				scanQrcode.addEventListener("tap",function(){
+					mui.openWindow("scanPage.html","scanPage.html");
+				});
+				
+			});
+		</script>
+	</body>
+
+</html>
