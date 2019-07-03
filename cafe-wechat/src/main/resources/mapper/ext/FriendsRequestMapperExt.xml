@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafebaby.cafewechat.mapper.ext.FriendsRequestMapperExt">
+    <select id="selectFriendsRequestsByDirection" parameterType="com.cafebaby.cafewechat.pojo.FriendsRequest" resultType="map">
+           SELECT
+                fr.id id,
+                fr.send_user_id sendUserId,
+                u.face_image sendFfaceImage,
+                u.nickname sendNickname
+            FROM
+                friends_request fr
+            LEFT JOIN users u ON fr.send_user_id = u.id
+            WHERE fr.accept_user_id =#{acceptUserId}
+            <if test="sendUserId!=null and sendUserId!=''">
+                fr.send_user_id = #{sendUserId}
+            </if>
+    </select>
+
+    <select id="selectMyFriends" resultType="map" parameterType="com.cafebaby.cafewechat.pojo.MyFriends">
+       SELECT
+            mf.id id,
+            mf.my_friend_user_id myFriendUserId,
+            u.nickname myFriendNickName,
+            u.face_image myFriendFaceImage
+        FROM
+            my_friends mf
+        LEFT JOIN users u ON mf.my_friend_user_id = u.id
+        WHERE 1=1
+        <if test="myUserId!=null and myUserId !=''">
+           and mf.my_user_id = #{myUserId}
+        </if>
+        <if test="myFriendUserId!=null and myFriendUserId!=''">
+           and mf.my_friend_user_id=#{myFriendUserId}
+        </if>
+
+    </select>
+
+    <delete id="deleteFriendRequest" parameterType="com.cafebaby.cafewechat.pojo.FriendsRequest">
+        delete from friends_request fr
+        where 1=1
+        <if test="sendUserId!=null and sendUserId!=''">
+           and fr.send_user_id = #{sendUserId}
+        </if>
+        <if test="acceptUserId!=null and acceptUserId!=''">
+            and fr.accept_user_id =#{acceptUserId}
+        </if>
+    </delete>
+
+</mapper>

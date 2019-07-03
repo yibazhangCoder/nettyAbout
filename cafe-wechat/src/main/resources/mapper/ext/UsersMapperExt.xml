@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafebaby.cafewechat.mapper.ext.UserMapperExt">
+
+  <select id="selectUsersByDesignCondition" parameterType="com.cafebaby.cafewechat.pojo.ext.UsersExt" resultType="com.cafebaby.cafewechat.pojo.ext.UsersExt">
+      SELECT
+          u.id id,
+          u.username username,
+          u.`password` `password`,
+          u.nickname nickname,
+          u.face_image faceImage,
+          u.face_image_big faceImageBig,
+          u.qrcode qrcode,
+          u.cid cid
+      FROM
+          users u
+      WHERE 1=1
+      <if test="id!=null and id!='' ">
+       and u.id = #{id}
+      </if>
+      <if test="username!=null and username !=''">
+        and u.username = #{username}
+      </if>
+      <if test="nickname!=null and nickname!=''">
+        and u.nickname = #{nickname}
+      </if>
+      <if test="qrcode!=null and qrcode!=''">
+        and u.qrcode = #{qrcode}
+      </if>
+      <if test="cid!=null and cid!=''">
+        and u.cid = #{cid}
+      </if>
+      <if test="password!=null and password!=''">
+        and u.password = #{password}
+      </if>
+  </select>
+
+</mapper>
