@@ -48,10 +48,11 @@ public class CafeWechatApplicationTests {
     }
 
 
+    //1562312591000211916(String), 1562312209000113250(String)
     @Test
     public void test2(){
         FriendsRequest friendsRequest = new FriendsRequest();
-        friendsRequest.setAcceptUserId("1560338304000108363");
+        friendsRequest.setAcceptUserId(null);
         List<Map<String,Object>> list = friendsService.findMyFriendsRequest(friendsRequest);
         System.out.println(list.get(0).get("sendNickname"));
     }

@@ -1,7 +1,7 @@
 package com.cafebaby.cafewechat.service;
 
 
-import com.cafebaby.cafewechat.pojo.Users;
+import com.cafebaby.cafewechat.pojo.ChatUsers;
 import com.cafebaby.cafewechat.pojo.ext.UsersExt;
 
 import java.io.IOException;
@@ -42,5 +42,5 @@ public interface UserService {
      * @param users
      * @return
      */
-    Users updateUserByPrimaryKey(Users users);
+    ChatUsers updateUserByPrimaryKey(ChatUsers users);
 }

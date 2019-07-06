@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication
 @ComponentScan(value = "com.cafebaby")
-@MapperScan(basePackages = "com.cafebaby.cafewechat.mapper")
 public class CafeWechatApplication {
 
     public static void main(String[] args) {

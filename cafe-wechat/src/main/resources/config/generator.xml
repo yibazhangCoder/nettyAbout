@@ -1,89 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "../mybatis-generate-core/src/main/resources/org/mybatis/generator/config/xml/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <!-- classPathEntry:数据库的JDBC驱动的jar包地址-->
-    <classPathEntry location="G:\graduate-repo\mysql\mysql-connector-java\8.0.13\mysql-connector-java-8.0.13.jar"/>
-    <context id="DB2Tables" targetRuntime="MyBatis3">
-        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
-        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
-        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
-        <commentGenerator>
-            <!-- 是否去除自动生成的日期 true：是 ： false:否 -->
-            <property name="suppressDate" value="true"/>
-            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
-            <property name="suppressAllComments" value="true"/>
-            <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
-        </commentGenerator>
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/wechat"
-                        userId="root"
-                        password="root">
-        </jdbcConnection>
 
+    <context id="myTable">
+
+        <property name="javaFileEncoding" value="UTF-8"/>
+
+        <!--哪个依赖合适用哪个-->
+        <!-- <plugin type="org.mybatis.generator.plugins.UserDefinePlugin"/>-->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/wechat?characterEncoding=UTF-8&amp;autoReconnect=true&amp;serverTimezone=GMT%2B8&amp;useSSL=false"
+                        userId="root"
+                        password="123456">
+            <property name="remarksReporting" value="true"/>
+        </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
+            <property name="yp_dateTime2String" value="true"/>
+            <property name="yp_projectName" value="prs"/>
         </javaTypeResolver>
-
-
-        <!-- java模型创建器，是必须要的元素
-       负责：1，key类（见context的defaultModelType）；2，java类；3，查询类
-       targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
-       targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
-    -->
-        <javaModelGenerator
-                targetPackage="com.cafebaby.cafewechat.pojo"
-                targetProject="src/main/java">
-            <!-- 从数据库返回的值被清理前后的空格  -->
-            <property name="trimStrings" value="true"/>
+        <!-- domain实体 -->
+        <!--D:\code\haiyu\src\main\java\com\haiyu\manager\pojo-->
+        <javaModelGenerator targetPackage="com.cafebaby.cafewechat.pojo"
+                            targetProject="D:/my-project/nettyAbout/cafe-wechat/src/main/java">
+            <!--<property name="rootClass" value="com.yp.custtrack.domain.BaseDomain"/>-->
         </javaModelGenerator>
-
-        <!-- 生成映射文件mapper接口的包名和位置 targetPackage 改为你对应的 dao 位置-->
-        <sqlMapGenerator
-                targetPackage="mapper"
-                targetProject="src/main/resources">
-            <!-- enableSubPackages:是否让schema作为包的后缀 -->
-            <property name="enableSubPackages" value="false"/>
+        <!-- xml映射文件 -->
+        <!--D:\code\haiyu\src\main\resources\mapper-->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="D:/my-project/nettyAbout/cafe-wechat/src/main/resources">
         </sqlMapGenerator>
-
-        <!--生成mapper接口、mapper.xml类存放位置-->
-        <javaClientGenerator
-                type="XMLMAPPER"
-                targetPackage="com.cafebaby.cafewechat.mapper"
-                targetProject="src/main/java">
+        <!-- dao 接口 -->
+        <!--D:\code\haiyu\src\main\java\com\haiyu\manager\dao-->
+        <javaClientGenerator targetPackage="com.cafebaby.cafewechat.mapper"
+                             targetProject="D:/my-project/nettyAbout/cafe-wechat/src/main/java"
+                             type="XMLMAPPER">
+            <!--是否允许建立子包（对应MySql的scheme）-->
             <property name="enableSubPackages" value="false"/>
+
         </javaClientGenerator>
-
-
-        <table tableName="users"
-               domainObjectName="Users"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <table tableName="my_friends"
-               domainObjectName="MyFriends"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <table tableName="friends_request"
-               domainObjectName="FriendsRequest"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <table tableName="chat_msg"
-               domainObjectName="ChatMsg"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
+<!--        <table tableName="chat_msg" domainObjectName="ChatMsgs"/>-->
+<!--        <table tableName="my_friends" domainObjectName="MyFriends"/>-->
+        <table tableName="users" domainObjectName="ChatUsers"/>
+<!--        <table tableName="friends_request" domainObjectName="FriendsRequest"/>-->
     </context>
 </generatorConfiguration>

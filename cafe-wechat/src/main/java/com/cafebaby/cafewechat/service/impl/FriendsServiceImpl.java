@@ -42,7 +42,7 @@ public class FriendsServiceImpl implements FriendsService {
     @Override
     public boolean sendRequestOfAddUser(FriendsRequest friendsRequest) {
         if(friendsRequest==null)return false;
-        friendsRequest.setId(IdUtils.make().toString());
+        friendsRequest.setId(IdUtils.make());
         friendsRequest.setRequestDateTime(new Date());
         int i  = friendsRequestMapper.insertSelective(friendsRequest);
         return i>0;
@@ -50,9 +50,9 @@ public class FriendsServiceImpl implements FriendsService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public boolean addFriends(String sendUserId, String acceptUserId) {
+    public boolean addFriends(Long sendUserId, Long acceptUserId) {
         MyFriends myFriends = new MyFriends();
-        myFriends.setId(IdUtils.make().toString());
+        myFriends.setId(IdUtils.make());
         myFriends.setMyUserId(acceptUserId);
         myFriends.setMyFriendUserId(sendUserId);
         int i  =myFriendsMapper.insertSelective(myFriends);
@@ -80,7 +80,7 @@ public class FriendsServiceImpl implements FriendsService {
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public Integer couldAddUser(FriendsRequest request) {
-        if(request.getSendUserId().equals(request.getAcceptUserId()))return 2;
+        if(request.getSendUserId()==request.getAcceptUserId())return 2;
         List<Map<String,Object>> requestList = friendsRequestMapperExt.selectFriendsRequestsByDirection(request);
         if(!requestList.isEmpty())return 3;
         MyFriends myFriends = new MyFriends();
@@ -94,11 +94,10 @@ public class FriendsServiceImpl implements FriendsService {
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public List<Map<String, Object>> findMyFriendsRequest(FriendsRequest friendsRequest) {
-        if (friendsRequest.getAcceptUserId()==null||"".equals(friendsRequest.getAcceptUserId())){
+        if (friendsRequest.getAcceptUserId()==null){
             logger.error("has error");
         }
         List<Map<String,Object>> list =  friendsRequestMapperExt.selectFriendsRequestsByDirection(friendsRequest);
-       // logger.warn("res="+list.get(0).get("sendNickname"));
         return list;
     }
 

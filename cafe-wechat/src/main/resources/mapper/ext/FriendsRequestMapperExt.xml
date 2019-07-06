@@ -10,9 +10,12 @@
             FROM
                 friends_request fr
             LEFT JOIN users u ON fr.send_user_id = u.id
-            WHERE fr.accept_user_id =#{acceptUserId}
+            WHERE 1=1
+             <if test="acceptUserId!=null and acceptUserId!=''">
+                 and trim(fr.accept_user_id) = #{acceptUserId}
+             </if>
             <if test="sendUserId!=null and sendUserId!=''">
-                fr.send_user_id = #{sendUserId}
+               and fr.send_user_id = #{sendUserId}
             </if>
     </select>
 
@@ -21,7 +24,8 @@
             mf.id id,
             mf.my_friend_user_id myFriendUserId,
             u.nickname myFriendNickName,
-            u.face_image myFriendFaceImage
+            u.face_image myFriendFaceImage,
+            u.username myFriendUsername
         FROM
             my_friends mf
         LEFT JOIN users u ON mf.my_friend_user_id = u.id

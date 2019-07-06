@@ -9,11 +9,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class FriendsRequestExt implements Serializable {
-    private String id;
+    private Long id;
 
-    private String sendUserId;
+    private Long sendUserId;
 
-    private String acceptUserId;
+    private Long acceptUserId;
 
     private Date requestDateTime;
 

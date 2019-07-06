@@ -26,7 +26,7 @@ public interface FriendsService {
      * 添加好友
      * @return
      */
-    boolean addFriends(String sendUserId, String acceptUserId);
+    boolean addFriends(Long sendUserId, Long acceptUserId);
 
     /**
      * 删除好友请求

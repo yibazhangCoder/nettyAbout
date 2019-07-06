@@ -1,7 +1,7 @@
 package com.cafebaby.cafewechat.controller;
 
 import com.cafebaby.cafewechat.common.ResultDTO;
-import com.cafebaby.cafewechat.pojo.Users;
+import com.cafebaby.cafewechat.pojo.ChatUsers;
 import com.cafebaby.cafewechat.pojo.VO.UsersVo;
 import com.cafebaby.cafewechat.pojo.ext.UsersExt;
 import com.cafebaby.cafewechat.service.impl.UserServiceImpl;
@@ -28,7 +28,7 @@ public class UserController {
     private UserServiceImpl userService;
 
     @PostMapping("/registorOrLogin")
-    public ResultDTO registorOrLogin(@RequestBody Users users, HttpServletRequest request){
+    public ResultDTO registorOrLogin(@RequestBody ChatUsers users, HttpServletRequest request){
         if(Strings.isBlank(users.getUsername())||Strings.isBlank(users.getPassword())){
             return ResultDTO.error("用户名和密码不能为空！");
         }
@@ -44,7 +44,7 @@ public class UserController {
         }else {
             UsersExt ext = new UsersExt();
             ext.setUsername(users.getUsername());
-            ext.setNickname(users.getUsername());
+            ext.setNickname("我是"+users.getUsername());
             ext.setFaceImage(users.getFaceImage());
             String path  = request.getServletContext().getContextPath()+"/static";
             System.out.println(path);
@@ -62,9 +62,9 @@ public class UserController {
 
 
     @PostMapping("/updateUser")
-    public ResultDTO updateUsers(@RequestBody Users users){
+    public ResultDTO updateUsers(@RequestBody ChatUsers users){
         if(users.getId()==null)return ResultDTO.error("参数错误！");
-        Users  res =  userService.updateUserByPrimaryKey(users);
+        ChatUsers  res =  userService.updateUserByPrimaryKey(users);
         UsersVo usersVo =  new UsersVo();
         BeanUtils.copyProperties(res,usersVo);
         return res==null?ResultDTO.error("更新失败！") :ResultDTO.success(usersVo);

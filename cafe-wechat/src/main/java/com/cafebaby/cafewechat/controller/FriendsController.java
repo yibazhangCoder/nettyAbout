@@ -1,5 +1,6 @@
 package com.cafebaby.cafewechat.controller;
 
+import com.cafebaby.cafewechat.pojo.VO.FriendRequestVo;
 import com.cafebaby.cafewechat.common.ResultDTO;
 import com.cafebaby.cafewechat.pojo.FriendsRequest;
 import com.cafebaby.cafewechat.pojo.MyFriends;
@@ -7,6 +8,7 @@ import com.cafebaby.cafewechat.pojo.VO.UsersVo;
 import com.cafebaby.cafewechat.pojo.ext.UsersExt;
 import com.cafebaby.cafewechat.service.FriendsService;
 import com.cafebaby.cafewechat.service.UserService;
+import com.cafebaby.cafewechat.utils.StringUtils;
 import com.cafebaby.cafewechat.utils.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,7 @@ public class FriendsController {
      */
     @PostMapping("/sendFriendRequest")
     public ResultDTO sendFriendRequest(@RequestBody FriendsRequest friendsRequest){
-        if(Strings.isBlank(friendsRequest.getSendUserId())||Strings.isBlank(friendsRequest.getAcceptUserId()))return ResultDTO.error("参数错误！");
+        if(friendsRequest.getSendUserId()==null||friendsRequest.getAcceptUserId()==null)return ResultDTO.error("参数错误！");
         FriendsRequest request = new FriendsRequest();
         request.setSendUserId(friendsRequest.getSendUserId());
         request.setAcceptUserId(friendsRequest.getAcceptUserId());
@@ -63,29 +65,34 @@ public class FriendsController {
 
     @PostMapping("/getMyFriendRequests")
     public ResultDTO getAllFriendRequest(@RequestBody FriendsRequest friendsRequest){
-        if(Strings.isBlank(friendsRequest.getAcceptUserId()))return ResultDTO.error("参数错误");
+        if(friendsRequest.getAcceptUserId()==null)return ResultDTO.error("参数错误");
         List<Map<String,Object>> res = friendsService.findMyFriendsRequest(friendsRequest);
         return ResultDTO.success(res);
     }
 
 
     @PostMapping("/passOrIgnore")
-    public ResultDTO passOrIgnoreRequest(@RequestBody FriendsRequest friendsRequest,@RequestBody  Integer type){
-        if(Strings.isBlank(friendsRequest.getAcceptUserId())||Strings.isBlank(friendsRequest.getSendUserId())||type==null)return ResultDTO.error("参数错误");
-        if(type==1){
+    public ResultDTO passOrIgnoreRequest(@RequestBody FriendRequestVo vo){
+        FriendsRequest friendsRequest =null;
+        if(vo!=null){
+            friendsRequest = new FriendsRequest();
+            BeanUtils.copyProperties(vo,friendsRequest);
+        }
+        if(friendsRequest.getSendUserId()==null||friendsRequest.getAcceptUserId()==null||vo.getType()==null)return ResultDTO.error("参数错误");
+        if(vo.getType()==1){
             boolean i = friendsService.addFriends(friendsRequest.getAcceptUserId(), friendsRequest.getSendUserId());
             boolean j = friendsService.addFriends(friendsRequest.getSendUserId(), friendsRequest.getAcceptUserId());
             boolean k = friendsService.removeRequestFriends(friendsRequest);
             if(i&&j&&k)return ResultDTO.success("添加成功");
-        }else if(type==0){
+        }else if(vo.getType()==0){
             friendsService.removeRequestFriends(friendsRequest);
         }
         return ResultDTO.error();
     }
 
-    @PostMapping("/getAllMyFriends")
-    public ResultDTO getAllMyFriends(@RequestBody String myUserId){
-        if(Strings.isBlank(myUserId))return ResultDTO.error("参数错误");
+    @PostMapping("/getAllMyFriends/{myUserId}")
+    public ResultDTO getAllMyFriends(@PathVariable("myUserId") Long myUserId){
+        if(myUserId==null)return ResultDTO.error("参数错误");
         MyFriends myFriends = new MyFriends();
         myFriends.setMyUserId(myUserId);
         List<Map<String,Object>> res = friendsService.getMyAllFriends(myFriends);
